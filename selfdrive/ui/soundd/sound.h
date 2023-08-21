@@ -32,4 +32,5 @@ protected:
   QMap<AudibleAlert, QPair<QSoundEffect *, int>> sounds;
 
   // FrogPilot variables
+  bool isSilentMode;
 };
