@@ -213,6 +213,7 @@ static void update_state(UIState *s) {
     const auto carParams = sm["carParams"].getCarParams();
     scene.longitudinal_control = carParams.getOpenpilotLongitudinalControl();
     if (scene.longitudinal_control) {
+      scene.conditional_experimental = carParams.getConditionalExperimentalMode();
       scene.experimental_mode_via_wheel = carParams.getExperimentalModeViaWheel();
       scene.driving_personalities_ui_wheel = carParams.getDrivingPersonalitiesUIWheel();
     }
@@ -255,6 +256,9 @@ static void update_state(UIState *s) {
   if (sm.updated("longitudinalPlan")) {
     const auto longitudinalPlan = sm["longitudinalPlan"].getLongitudinalPlan();
     scene.frogpilot_toggles_updated = longitudinalPlan.getFrogpilotTogglesUpdated();
+    if (scene.conditional_experimental) {
+      scene.conditional_status = longitudinalPlan.getStatusValue();
+    }
   }
   if (sm.updated("wideRoadCameraState")) {
     auto cam_state = sm["wideRoadCameraState"].getWideRoadCameraState();
@@ -278,6 +282,8 @@ void ui_update_params(UIState *s) {
   }
   if (!toggles_checked && scene.default_params_set) {
     scene.compass = params.getBool("Compass");
+    scene.conditional_speed = params.getInt("ConditionalExperimentalModeSpeed");
+    scene.conditional_speed_lead = params.getInt("ConditionalExperimentalModeSpeedLead");
     scene.custom_road_ui = params.getBool("CustomRoadUI");
     scene.blind_spot_path = scene.custom_road_ui && params.getBool("BlindSpotPath");
     scene.frog_theme = params.getBool("FrogTheme");
@@ -307,6 +313,10 @@ void ui_update_params(UIState *s) {
     }
   }
   if (scene.frogpilot_toggles_updated) {
+    if (scene.conditional_experimental) {
+      scene.conditional_speed = params.getInt("ConditionalExperimentalModeSpeed");
+      scene.conditional_speed_lead = params.getInt("ConditionalExperimentalModeSpeedLead");
+    }
     if (scene.custom_road_ui) {
       scene.lane_line_width = params.getInt("LaneLinesWidth") / 12.0 * 0.1524; // Convert from inches to meters
       scene.path_edge_width = params.getInt("PathEdgeWidth");

@@ -47,6 +47,7 @@ class CarState(CarStateBase):
     # FrogPilot variables
     self.params = Params()
     self.params_memory = Params("/dev/shm/params")
+    self.conditional_experimental_mode = self.CP.conditionalExperimentalMode
     self.driving_personalities_via_wheel = self.CP.drivingPersonalitiesUIWheel
     self.experimental_mode_via_wheel = self.CP.experimentalModeViaWheel
     self.lkas_pressed = False
@@ -191,15 +192,22 @@ class CarState(CarStateBase):
       if self.distance_lines != self.previous_distance_lines:
         put_int_nonblocking("LongitudinalPersonality", self.distance_lines)
         self.previous_distance_lines = self.distance_lines
+        self.params_memory.put_bool("FrogPilotTogglesUpdated", True)
 
     # Toggle Experimental Mode from steering wheel function
     if self.experimental_mode_via_wheel and ret.cruiseState.enabled:
       message_keys = ["LDA_ON_MESSAGE", "LKAS_STATUS", "SET_ME_X02"]
       self.lkas_pressed = any(cp_cam.vl["LKAS_HUD"].get(key) == 1 for key in message_keys)
       if self.lkas_pressed and not self.lkas_previously_pressed:
-        experimental_mode = self.params.get_bool("ExperimentalMode")
-        # Invert the value of "ExperimentalMode"
-        put_bool_nonblocking("ExperimentalMode", not experimental_mode)
+        if self.conditional_experimental_mode:
+          # Set "ConditionalStatus" to work with "Conditional Experimental Mode"
+          conditional_status = self.params_memory.get_int("ConditionalStatus")
+          override_value = 0 if conditional_status in [1, 2] else 1 if conditional_status >= 2 else 2
+          self.params_memory.put_int("ConditionalStatus", override_value)
+        else:
+          experimental_mode = self.params.get_bool("ExperimentalMode")
+          # Invert the value of "ExperimentalMode"
+          put_bool_nonblocking("ExperimentalMode", not experimental_mode)
       self.lkas_previously_pressed = self.lkas_pressed
 
     # For configuring onroad statuses
