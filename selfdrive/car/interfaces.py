@@ -184,6 +184,8 @@ class CarInterfaceBase(ABC):
 
     # FrogPilot variables
     params = Params()
+    ret.lateralTune = params.get_bool("LateralTuning")
+    ret.pfeiferjDesiredCurvatures = ret.lateralTune and params.get_bool("AverageDesiredCurvature")
     return ret
 
   @staticmethod
