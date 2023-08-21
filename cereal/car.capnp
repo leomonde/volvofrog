@@ -503,6 +503,7 @@ struct CarParams {
 
   # FrogPilot CarParams
   lateralTune @78 :Bool;
+  longitudinalTune @79 :Bool;
   pfeiferjDesiredCurvatures @80 :Bool;
   twilsoncoNNFF @82 :Bool;
 
