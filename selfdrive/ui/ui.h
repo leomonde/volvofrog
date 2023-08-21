@@ -151,6 +151,7 @@ typedef struct UIScene {
   bool frog_theme;
   bool frogpilot_toggles_updated;
   bool toyota_car = true;
+  int screen_brightness;
 
 } UIScene;
 
