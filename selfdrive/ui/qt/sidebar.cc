@@ -114,7 +114,17 @@ void Sidebar::updateState(const UIState &s) {
   // Developer UI
   if (isDeveloperUI) {
     ItemStatus cpuStatus = {{tr("CPU"), cpu}, isFrogColors ? frog_color : good_color};
+    if (cpu_usage >= 85) {
+      cpuStatus = {{tr("CPU"), cpu}, danger_color};
+    } else if (cpu_usage >= 70) {
+      cpuStatus = {{tr("CPU"), cpu}, warning_color};
+    }
     ItemStatus memoryStatus = {{tr("MEMORY"), memory}, isFrogColors ? frog_color : good_color};
+    if (memory_usage >= 85) {
+      memoryStatus = {{tr("MEMORY"), memory}, danger_color};
+    } else if (memory_usage >= 70) {
+      memoryStatus = {{tr("MEMORY"), memory}, warning_color};
+    }
     setProperty("cpuStatus", QVariant::fromValue(cpuStatus));
     setProperty("memoryStatus", QVariant::fromValue(memoryStatus));
   }
