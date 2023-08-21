@@ -111,7 +111,6 @@ class LongitudinalPlanner:
     self.aggressive_jerk = self.params.get_int("AggressiveJerkValue") / 10
     self.standard_jerk = self.params.get_int("StandardJerkValue") / 10
     self.relaxed_jerk = self.params.get_int("RelaxedJerkValue") / 10
-    self.frogpilot_toggles_checked = False
     self.frogpilot_toggles_updated = False
     self.read_param()
     # Set variables for Conditional Experimental Mode
@@ -149,10 +148,6 @@ class LongitudinalPlanner:
       if self.CP.longitudinalTune:
         self.acceleration_profile = self.params.get_int("AccelerationProfile")
         self.increased_stopping_distance = self.params.get_int("IncreasedStoppingDistance")
-      # Check values twice before resetting "FrogPilotTogglesUpdated" so other parts of the code update
-      if self.frogpilot_toggles_checked:
-        self.params_memory.put_bool("FrogPilotTogglesUpdated", False)
-      self.frogpilot_toggles_checked = not self.frogpilot_toggles_checked
     try:
       self.personality = int(self.params.get('LongitudinalPersonality'))
     except (ValueError, TypeError):

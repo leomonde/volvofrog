@@ -259,7 +259,6 @@ static void update_state(UIState *s) {
   }
   if (sm.updated("longitudinalPlan")) {
     const auto longitudinalPlan = sm["longitudinalPlan"].getLongitudinalPlan();
-    scene.frogpilot_toggles_updated = longitudinalPlan.getFrogpilotTogglesUpdated();
     if (scene.conditional_experimental) {
       scene.conditional_status = longitudinalPlan.getStatusValue();
     }
@@ -283,7 +282,6 @@ void ui_update_params(UIState *s) {
   s->scene.map_on_left = params.getBool("NavSettingLeftSide");
 
   // FrogPilot variables
-  static Params params_memory = Params("/dev/shm/params");
   static UIScene &scene = s->scene;
   static bool toggles_checked = false;
   if (!scene.default_params_set) {
@@ -311,18 +309,11 @@ void ui_update_params(UIState *s) {
     scene.wide_camera_disabled = params.getBool("WideCameraDisable");
     toggles_checked = true;
   }
-  // FrogPilot variables that need to be updated whenever the user changes a toggle value
-  if (!scene.started) {
-    scene.frogpilot_toggles_updated = params_memory.getBool("FrogPilotTogglesUpdated");
-    if (scene.frogpilot_toggles_updated) {
-      static bool frogpilot_toggles_checked = false;
-      if (frogpilot_toggles_checked) {
-        params_memory.putBool("FrogPilotTogglesUpdated", false);
-      }
-      frogpilot_toggles_checked = !frogpilot_toggles_checked;
-    }
-  }
-  if (scene.frogpilot_toggles_updated) {
+
+  // Update live FrogPilot variables when they are changed
+  static Params params_memory = Params("/dev/shm/params");
+  static bool live_toggles_checked = false;
+  if (params_memory.getBool("FrogPilotTogglesUpdated")) {
     if (scene.conditional_experimental) {
       scene.conditional_speed = params.getInt("ConditionalExperimentalModeSpeed");
       scene.conditional_speed_lead = params.getInt("ConditionalExperimentalModeSpeedLead");
@@ -337,6 +328,10 @@ void ui_update_params(UIState *s) {
     scene.screen_brightness = params.getInt("ScreenBrightness");
     scene.steering_wheel = params.getInt("SteeringWheel");
   }
+  if (live_toggles_checked && (scene.enabled || scene.always_on_lateral_active)) {
+    params_memory.putBool("FrogPilotTogglesUpdated", false);
+  }
+  live_toggles_checked = !live_toggles_checked;
 }
 
 void UIState::updateStatus() {
