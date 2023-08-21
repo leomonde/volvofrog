@@ -823,6 +823,24 @@ void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
   // paint adjacent lane paths
   const bool speedCheck = speed >= (is_metric ? 32 : 20);
   const bool isNotTurning = abs(steeringAngleDeg) <= 60;
+
+  // paint blindspot path
+  QLinearGradient bs(0, height(), 0, 0);
+  if ((blindSpotLeft || blindSpotRight) && speedCheck && isNotTurning && is_cruise_set) {
+    bs.setColorAt(0.0, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.6));
+    bs.setColorAt(0.5, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.4));
+    bs.setColorAt(1.0, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.2));
+  }
+
+  painter.setBrush(bs);
+  if (blindSpotLeft) {
+    painter.drawPolygon(scene.track_left_adjacent_lane_vertices);
+  }
+  if (blindSpotRight) {
+    painter.drawPolygon(scene.track_right_adjacent_lane_vertices);
+  }
+
+  // paint developerUI path
   if (developerUI && speedCheck && isNotTurning && is_cruise_set) {
     const bool isImperialUnits = developerUI == 1;
     const double conversionFactor = isImperialUnits ? 3.28084 : 1.0;
@@ -867,22 +885,6 @@ void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
 
     paintLane(painter, scene.track_left_adjacent_lane_vertices, laneWidthLeft, blindSpotLeft);
     paintLane(painter, scene.track_right_adjacent_lane_vertices, laneWidthRight, blindSpotRight);
-  }
-
-  // paint blindspot path
-  QLinearGradient bs(0, height(), 0, 0);
-  if ((blindSpotLeft || blindSpotRight) && speedCheck && isNotTurning && is_cruise_set) {
-    bs.setColorAt(0.0, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.6));
-    bs.setColorAt(0.5, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.4));
-    bs.setColorAt(1.0, QColor::fromHslF(0 / 360., 0.75, 0.50, 0.2));
-  }
-
-  painter.setBrush(bs);
-  if (blindSpotLeft) {
-    painter.drawPolygon(scene.track_left_adjacent_lane_vertices);
-  }
-  if (blindSpotRight) {
-    painter.drawPolygon(scene.track_right_adjacent_lane_vertices);
   }
 
   painter.restore();
