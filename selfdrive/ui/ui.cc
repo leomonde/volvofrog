@@ -254,6 +254,7 @@ void ui_update_params(UIState *s) {
     scene.mute_dm = params.getBool("FireTheBabysitter") && params.getBool("MuteDM");
     scene.rotating_wheel = params.getBool("RotatingWheel");
     scene.screen_brightness = params.getInt("ScreenBrightness");
+    scene.steering_wheel = params.getInt("SteeringWheel");
     scene.wide_camera_disabled = params.getBool("WideCameraDisable");
     toggles_checked = true;
   }
@@ -270,6 +271,7 @@ void ui_update_params(UIState *s) {
   }
   if (scene.frogpilot_toggles_updated) {
     scene.screen_brightness = params.getInt("ScreenBrightness");
+    scene.steering_wheel = params.getInt("SteeringWheel");
   }
 }
 
