@@ -62,5 +62,7 @@ private:
   std::unique_ptr<PubMaster> pm;
 
   // FrogPilot variables
+  bool isFahrenheit;
   bool isFrogColors;
+  bool isNumericalTemp;
 };
