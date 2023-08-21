@@ -98,14 +98,9 @@ def get_T_FOLLOW(custom_personalities=False, aggressive_follow=1.25, standard_fo
     else:
       raise NotImplementedError("Longitudinal personality not supported")
 
-def get_stopped_equivalence_factor(v_ego, v_lead, v_lead_distance, t_follow, aggressive_acceleration, increased_stopping_distance, smoother_braking):
+def get_stopped_equivalence_factor(v_ego, v_lead, v_lead_distance, t_follow, increased_stopping_distance, smoother_braking):
   distance_offset = 0
   speed_difference = v_ego - v_lead
-  if aggressive_acceleration and np.all(speed_difference <= -1):
-    # Offset by FrogAi for FrogPilot for a more aggressive takeoff with a lead
-    offset = np.clip(np.abs(speed_difference) - v_ego, 0, 10)
-    distance_offset += np.clip(v_lead_distance, 0, offset)
-    distance_offset += increased_stopping_distance
   if increased_stopping_distance and np.all(increased_stopping_distance >= v_lead):
     # Increase the stopping distance for a more comfortable stop
     distance_offset -= np.maximum(0, increased_stopping_distance - speed_difference)
@@ -383,15 +378,22 @@ class LongitudinalMpc:
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
 
+    # Offset by FrogAi for FrogPilot for a more aggressive takeoff with a lead
+    if self.aggressive_acceleration:
+      stopped_distance = STOP_DISTANCE + increased_stopping_distance
+      speed_factor = np.clip(lead_xv_0[:,1] - v_ego, 1, stopped_distance)
+      t_follow_offset = np.clip(5 - v_ego, 1, speed_factor)
+      t_follow = t_follow / t_follow_offset
+
     # LongitudinalPlan variables for onroad driving insights
     self.safe_obstacle_distance = int(np.max(get_safe_obstacle_distance(self.x_sol[:,1], t_follow)))
-    self.stopped_equivalence_factor = int(np.max(get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_0[:,1], lead_xv_0[:,0], t_follow, self.aggressive_acceleration, increased_stopping_distance, self.smoother_braking)))
+    self.stopped_equivalence_factor = int(np.max(get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_0[:,1], lead_xv_0[:,0], t_follow, increased_stopping_distance, self.smoother_braking)))
 
     # To estimate a safe distance from a moving lead, we calculate how much stopping
     # distance that lead needs as a minimum. We can add that to the current distance
     # and then treat that as a stopped car/obstacle at this new distance.
-    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_0[:,1], lead_xv_0[:,0], t_follow, self.aggressive_acceleration, increased_stopping_distance, self.smoother_braking)
-    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_1[:,1], lead_xv_1[:,0], t_follow, self.aggressive_acceleration, increased_stopping_distance, self.smoother_braking)
+    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_0[:,1], lead_xv_0[:,0], t_follow, increased_stopping_distance, self.smoother_braking)
+    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(self.x_sol[:,1], lead_xv_1[:,1], lead_xv_1[:,0], t_follow, increased_stopping_distance, self.smoother_braking)
 
     self.params[:,0] = ACCEL_MIN
     self.params[:,1] = self.max_a
