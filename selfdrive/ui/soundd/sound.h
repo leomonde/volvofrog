@@ -30,4 +30,6 @@ protected:
   SubMaster sm;
   Alert current_alert = {};
   QMap<AudibleAlert, QPair<QSoundEffect *, int>> sounds;
+
+  // FrogPilot variables
 };

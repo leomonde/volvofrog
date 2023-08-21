@@ -13,6 +13,7 @@
 #include "common/watchdog.h"
 #include "common/util.h"
 #include "system/hardware/hw.h"
+#include "selfdrive/ui/qt/offroad/frogpilot_settings.h"
 #include "selfdrive/ui/qt/widgets/controls.h"
 #include "selfdrive/ui/qt/widgets/input.h"
 #include "selfdrive/ui/qt/widgets/scrollview.h"
@@ -411,6 +412,8 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), new SoftwarePanel(this)},
+    {tr("Controls"), new FrogPilotControlsPanel(this)},
+    {tr("Visuals"), new FrogPilotVisualsPanel(this)},
   };
 
   nav_btns = new QButtonGroup(this);
