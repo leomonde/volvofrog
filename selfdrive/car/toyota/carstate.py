@@ -47,6 +47,10 @@ class CarState(CarStateBase):
     # FrogPilot variables
     self.params = Params()
     self.params_memory = Params("/dev/shm/params")
+    self.driving_personalities_via_wheel = self.CP.drivingPersonalitiesUIWheel
+    self.distance_button = 0
+    self.distance_lines = 0
+    self.previous_distance_lines = 0
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -166,6 +170,24 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
+
+    # Driving personalities function
+    if self.driving_personalities_via_wheel:
+      if self.CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
+        # KRKeegan - Add support for toyota distance button
+        self.distance_button = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+        # Need to subtract by 1 to comply with the personality profiles of "0", "1", and "2"
+        self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
+
+      if self.CP.carFingerprint in RADAR_ACC_CAR:
+        # These cars have the acc_control on car can
+        self.distance_button = 1 if cp.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+        # Need to subtract by 1 to comply with the personality profiles of "0", "1", and "2"
+        self.distance_lines = max(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"] - 1, 0)
+
+      if self.distance_lines != self.previous_distance_lines:
+        put_int_nonblocking("LongitudinalPersonality", self.distance_lines)
+        self.previous_distance_lines = self.distance_lines
 
     # For configuring onroad statuses
     ret.toyotaCar = True
