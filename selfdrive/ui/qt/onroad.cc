@@ -338,7 +338,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
     // Custom steering wheel icon
     engage_img = wheel_images[steeringWheel];
     QPixmap img = steeringWheel ? engage_img : (experimental_mode ? experimental_img : engage_img);
-    QColor background_color = steeringWheel ? (scene.always_on_lateral_active ? QColor(10, 186, 181, 255) : scene.conditional_status == 1 ? QColor(255, 246, 0, 255) : experimental_mode ? QColor(218, 111, 37, 241) : scene.navigate_on_openpilot ? QColor(49, 161, 238, 255) : QColor(0, 0, 0, 166)) : QColor(0, 0, 0, 166);
+    QColor background_color = steeringWheel && (!isDown() && engageable) ? (scene.always_on_lateral_active ? QColor(10, 186, 181, 255) : scene.conditional_status == 1 ? QColor(255, 246, 0, 255) : experimental_mode ? QColor(218, 111, 37, 241) : scene.navigate_on_openpilot ? QColor(49, 161, 238, 255) : QColor(0, 0, 0, 166)) : QColor(0, 0, 0, 166);
     drawIcon(p, QPoint(btn_size / 2, btn_size / 2), img, background_color, (isDown() || !engageable) ? 0.6 : 1.0);
   }
 }
@@ -662,8 +662,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // Custom steering wheel icon
     engage_img = wheel_images[steeringWheel];
     QPixmap img = steeringWheel ? engage_img : (experimentalMode ? experimental_img : engage_img);
-    QColor background_color = steeringWheel ? (scene.always_on_lateral_active ? QColor(10, 186, 181, 255) : scene.conditional_status == 1 ? QColor(255, 246, 0, 255) : experimentalMode ? QColor(218, 111, 37, 241) : scene.navigate_on_openpilot ? QColor(49, 161, 238, 255) : QColor(0, 0, 0, 166)) : QColor(0, 0, 0, 166);
-    drawIconRotate(p, QPoint(rect().right() - btn_size / 2 - UI_BORDER_SIZE * 2 + 25, btn_size / 2 + int(UI_BORDER_SIZE * 1.5)), img, background_color, status != STATUS_ENGAGED ? 0.6 : 1.0, steeringAngleDeg);
+    QColor background_color = steeringWheel && (status != STATUS_DISENGAGED) ? (scene.always_on_lateral_active ? QColor(10, 186, 181, 255) : scene.conditional_status == 1 ? QColor(255, 246, 0, 255) : experimentalMode ? QColor(218, 111, 37, 241) : scene.navigate_on_openpilot ? QColor(49, 161, 238, 255) : QColor(0, 0, 0, 166)) : QColor(0, 0, 0, 166);
+    drawIconRotate(p, QPoint(rect().right() - btn_size / 2 - UI_BORDER_SIZE * 2 + 25, btn_size / 2 + int(UI_BORDER_SIZE * 1.5)), img, background_color, status != STATUS_DISENGAGED ? 1.0 : 0.6, steeringAngleDeg);
   }
 
   // FrogPilot status bar
