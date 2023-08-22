@@ -1,4 +1,4 @@
-![](https://i.imgur.com/wpNJoJ6.png)
+![](https://i.imgur.com/jm3G3zW.png)
 
 Table of Contents
 =======================
@@ -45,7 +45,7 @@ FrogPilot is my custom "Frog Themed" fork of openpilot that has been tailored to
 
 FrogPilot was last updated on:
 
-**August 20th, 2023**
+**August 23rd, 2023**
 
 Features
 ------
@@ -65,6 +65,7 @@ FrogPilot offers a wide range of customizable features that can be easily toggle
 - Conditional Experimental Mode
   - Automatically enables "Experimental Mode":
     - When a curve is detected
+    - When approaching a slower lead vehicle
     - When driving below a set speed
     - When either turn signal is activated below 55mph to assist with turns
     - When stop lights or stop signs are detected
@@ -98,6 +99,7 @@ FrogPilot offers a wide range of customizable features that can be easily toggle
 - Easy Panda flashing via a "Flash Panda" button located within the "Device" menu
 - Have the sidebar show by default to monitor your device temperature and connectivity with ease
 - Increase the "MAX" speed by 5 instead of 1 on short presses (Toyota/Lexus only)
+- Navigate on openpilot without a comma prime subscription
 - Nudgeless lane changes
   - Lane detection to prevent lane changes into curbs or going off-road
   - Optional delay setting
@@ -112,6 +114,7 @@ FrogPilot offers a wide range of customizable features that can be easily toggle
 - Tap the speed indicator to remove it from the screen
 - Toggle Experimental Mode via the "Lane Departure Alert" button on your steering wheel (Toyota/Lexus only)
   - Other makes can simply double tap the screen while on-road
+- Use turn desires when below the minimum lane change speed for more precise turns
 
 How to Install
 ------
