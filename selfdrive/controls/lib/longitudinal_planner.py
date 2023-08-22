@@ -295,13 +295,13 @@ class LongitudinalPlanner:
       return True
 
     # Stop sign and light check
-    stop_light_detected = self.stop_sign_and_light(carstate, lead, lead_distance, modeldata, radarstate, v_ego, v_lead) and not standstill
+    stop_light_detected = self.stop_sign_and_light(carstate, lead, lead_distance, modeldata, radarstate, v_ego, v_lead) if self.stop_lights and not standstill else False
     if stop_light_detected:
       self.status_value = 7
       return True
 
     # Road curvature check
-    self.curve = self.road_curvature(lead, modeldata, v_ego) and not standstill
+    self.curve = self.road_curvature(lead, modeldata, v_ego) if self.curves and not standstill and not self.stop_sign_and_light(carstate, lead, lead_distance, modeldata, radarstate, v_ego, v_lead) else False
     if self.curve:
       self.status_value = 8
       return True
@@ -318,7 +318,7 @@ class LongitudinalPlanner:
   # Determine the road curvature - Credit goes to to Pfeiferj!
   def road_curvature(self, lead, modeldata, v_ego):
     # Check if there's a lead vehicle if the toggle is on
-    if self.curves and not (not self.curves_lead and lead):
+    if not (not self.curves_lead and lead):
       predicted_lateral_accelerations = np.abs(np.array(modeldata.acceleration.y))
       predicted_velocities = np.array(modeldata.velocity.x)
       if len(predicted_lateral_accelerations) == len(predicted_velocities) != 0:
@@ -336,7 +336,7 @@ class LongitudinalPlanner:
 
   # Stop sign and stop light detection - Credit goes to the DragonPilot team!
   def stop_sign_and_light(self, carstate, lead, lead_distance, modeldata, radarstate, v_ego, v_lead):
-    if self.stop_lights and abs(carstate.steeringAngleDeg) <= 60 or self.stop_light_count >= THRESHOLD:
+    if abs(carstate.steeringAngleDeg) <= 60 or self.stop_light_count >= THRESHOLD:
       # Check to make sure we don't have a lead that's stopping for the red light / stop sign
       if not lead or (lead and not (self.previous_lead_speed >= v_lead or lead_distance <= 10 or v_lead <= 1)):
         if len(modeldata.orientation.x) == len(modeldata.position.x) == TRAJECTORY_SIZE:
