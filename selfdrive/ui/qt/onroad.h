@@ -18,6 +18,7 @@ const int img_size = (btn_size / 4) * 3;
 static bool map_open;
 static bool reverseCruiseIncrease;
 static bool speedHidden;
+static int personalityProfile;
 
 
 // ***** onroad widgets *****
@@ -87,6 +88,7 @@ private:
 
   // FrogPilot widgets
   void drawCompass(QPainter &p);
+  void drawDrivingPersonalities(QPainter &p);
   void drawFrogSignals(QPainter &p);
   void drawStatusBar(QPainter &p);
 
@@ -121,6 +123,7 @@ private:
   bool frogColors;
   bool frogSignals;
   bool muteDM;
+  bool onroadAdjustableProfiles;
   bool rotatingWheel;
   bool turnSignalLeft;
   bool turnSignalRight;
@@ -131,6 +134,7 @@ private:
   QPixmap compass_inner_img;
   QPixmap engage_img;
   QPixmap experimental_img;
+  QVector<std::pair<QPixmap, QString>> profile_data;
   static constexpr int totalFrames = 8;
   std::map<int, QPixmap> wheel_images;
   std::vector<QPixmap> signalImgVector;

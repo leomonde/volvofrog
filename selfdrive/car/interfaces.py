@@ -281,6 +281,7 @@ class CarInterfaceBase(ABC):
     # FrogPilot variables
     params = Params()
     lateralTune = params.get_bool("LateralTuning")
+    ret.drivingPersonalitiesUIWheel = params.get_bool("DrivingPersonalitiesUIWheel")
     ret.longitudinalTune = params.get_bool("LongitudinalTuning")
     ret.accelerationProfile = params.get_int("AccelerationProfile") if ret.longitudinalTune else 2
     ret.pfeiferjDesiredCurvatures = lateralTune and params.get_bool("AverageDesiredCurvature")
