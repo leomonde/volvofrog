@@ -124,6 +124,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"CustomDrivingPersonalities", PERSISTENT},
     {"CustomRoadUI", PERSISTENT},
     {"DefaultParamsSet", PERSISTENT},
+    {"DeveloperUI", PERSISTENT},
     {"DeviceShutdownTimer", PERSISTENT},
     {"DisableAllLogging", PERSISTENT},
     {"DisableInternetCheck", PERSISTENT},

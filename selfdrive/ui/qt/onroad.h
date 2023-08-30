@@ -88,6 +88,7 @@ private:
 
   // FrogPilot widgets
   void drawCompass(QPainter &p);
+  void drawDeveloperUI(QPainter &p);
   void drawDrivingPersonalities(QPainter &p);
   void drawFrogSignals(QPainter &p);
   void drawStatusBar(QPainter &p);
@@ -130,13 +131,20 @@ private:
   bool toyotaCar;
   bool turnSignalLeft;
   bool turnSignalRight;
+  double maxAcceleration = std::numeric_limits<double>::lowest();
+  float laneWidthLeft;
+  float laneWidthRight;
   int animationFrameIndex;
   int bearingDeg;
   int conditionalSpeed;
   int conditionalSpeedLead;
   int conditionalStatus;
+  int desiredFollow;
+  int developerUI;
+  int obstacleDistance;
   int steeringAngleDeg;
   int steeringWheel;
+  int stoppedEquivalence;
   QPixmap compass_inner_img;
   QPixmap engage_img;
   QPixmap experimental_img;

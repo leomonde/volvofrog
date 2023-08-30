@@ -121,10 +121,10 @@ void update_model(UIState *s,
 
   // update left adjacent path
   bool isNotTurning = abs(scene.steering_angle_deg) <= 60;
-  update_line_data(s, lane_lines[4], scene.blind_spot_path && isNotTurning ? scene.lane_width_left / 2 : 0, 0, &scene.track_left_adjacent_lane_vertices, max_idx);
+  update_line_data(s, lane_lines[4], (scene.blind_spot_path || scene.developer_ui) && isNotTurning ? scene.lane_width_left / 2 : 0, 0, &scene.track_left_adjacent_lane_vertices, max_idx);
 
   // update right adjacent path
-  update_line_data(s, lane_lines[5], scene.blind_spot_path && isNotTurning ? scene.lane_width_right / 2 : 0, 0, &scene.track_right_adjacent_lane_vertices, max_idx);
+  update_line_data(s, lane_lines[5], (scene.blind_spot_path || scene.developer_ui) && isNotTurning ? scene.lane_width_right / 2 : 0, 0, &scene.track_right_adjacent_lane_vertices, max_idx);
 }
 
 void update_dmonitoring(UIState *s, const cereal::DriverStateV2::Reader &driverstate, float dm_fade_state, bool is_rhd) {
@@ -230,11 +230,11 @@ static void update_state(UIState *s) {
       scene.blind_spot_left = carState.getLeftBlindspot();
       scene.blind_spot_right = carState.getRightBlindspot();
     }
-    if (scene.frog_signals) {
+    if (scene.developer_ui || scene.frog_signals) {
       scene.turn_signal_left = carState.getLeftBlinker();
       scene.turn_signal_right = carState.getRightBlinker();
     }
-    if (scene.blind_spot_path || scene.rotating_wheel) {
+    if (scene.blind_spot_path || scene.developer_ui || scene.rotating_wheel) {
       scene.steering_angle_deg = carState.getSteeringAngleDeg();
     }
     if (scene.started) {
@@ -254,13 +254,18 @@ static void update_state(UIState *s) {
   }
   if (sm.updated("lateralPlan")) {
     const auto lateralPlan = sm["lateralPlan"].getLateralPlan();
-    if (scene.blind_spot_path) {
+    if (scene.blind_spot_path || scene.developer_ui) {
       scene.lane_width_left = lateralPlan.getLaneWidthLeft();
       scene.lane_width_right = lateralPlan.getLaneWidthRight();
     }
   }
   if (sm.updated("longitudinalPlan")) {
     const auto longitudinalPlan = sm["longitudinalPlan"].getLongitudinalPlan();
+    if (scene.developer_ui) {
+      scene.desired_follow = longitudinalPlan.getDesiredFollowDistance();
+      scene.obstacle_distance = longitudinalPlan.getSafeObstacleDistance();
+      scene.stopped_equivalence = longitudinalPlan.getStoppedEquivalenceFactor();
+    }
   }
   if (sm.updated("wideRoadCameraState")) {
     auto cam_state = sm["wideRoadCameraState"].getWideRoadCameraState();
@@ -288,6 +293,7 @@ void ui_update_params(UIState *s) {
     scene.custom_road_ui = params.getBool("CustomRoadUI");
     scene.acceleration_path = scene.custom_road_ui && params.getBool("AccelerationPath");
     scene.blind_spot_path = scene.custom_road_ui && params.getBool("BlindSpotPath");
+    scene.developer_ui = params.getInt("DeveloperUI");
     scene.frog_theme = params.getBool("FrogTheme");
     scene.frog_colors = scene.frog_theme && params.getBool("FrogColors");
     scene.frog_signals = scene.frog_theme && params.getBool("FrogSignals");
@@ -318,6 +324,7 @@ void ui_update_params(UIState *s) {
       scene.path_width = params.getInt("PathWidth") / 10.0 * 0.1524;           // Convert from feet to meters
       scene.road_edge_width = params.getInt("RoadEdgesWidth") / 12.0 * 0.1524; // Convert from inches to meters
     }
+    scene.developer_ui = params.getInt("DeveloperUI");
     scene.screen_brightness = params.getInt("ScreenBrightness");
     scene.steering_wheel = params.getInt("SteeringWheel");
     if (live_toggles_checked && scene.enabled) {

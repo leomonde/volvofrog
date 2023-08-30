@@ -377,5 +377,10 @@ class LongitudinalPlanner:
 
     # FrogPilot longitudinalPlan variables
     longitudinalPlan.conditionalExperimentalMode = self.experimental_mode
+    # LongitudinalPlan variables for onroad driving insights
+    have_lead = self.detect_lead(sm['radarState'])
+    longitudinalPlan.safeObstacleDistance = self.mpc.safe_obstacle_distance if have_lead else 0
+    longitudinalPlan.stoppedEquivalenceFactor = self.mpc.stopped_equivalence_factor if have_lead else 0
+    longitudinalPlan.desiredFollowDistance = self.mpc.safe_obstacle_distance - self.mpc.stopped_equivalence_factor if have_lead else 0
 
     pm.send('longitudinalPlan', plan_send)
