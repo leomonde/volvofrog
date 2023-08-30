@@ -160,9 +160,11 @@ typedef struct UIScene {
   bool frog_colors;
   bool frog_theme;
   bool mute_dm;
+  bool rotating_wheel;
   bool toyota_car = true;
   bool wide_camera_disabled;
   int screen_brightness;
+  int steering_angle_deg;
 
 } UIScene;
 
