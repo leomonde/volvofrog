@@ -215,6 +215,7 @@ static void update_state(UIState *s) {
     const auto carParams = sm["carParams"].getCarParams();
     scene.longitudinal_control = carParams.getOpenpilotLongitudinalControl();
     if (scene.longitudinal_control) {
+      scene.conditional_experimental = carParams.getConditionalExperimentalMode();
       scene.driving_personalities_ui_wheel = carParams.getDrivingPersonalitiesUIWheel();
       scene.experimental_mode_via_wheel = carParams.getExperimentalModeViaWheel();
     }
@@ -278,6 +279,8 @@ void ui_update_params(UIState *s) {
   }
   if (!toggles_checked && scene.default_params_set) {
     scene.compass = params.getBool("Compass");
+    scene.conditional_speed = params.getInt("ConditionalExperimentalModeSpeed");
+    scene.conditional_speed_lead = params.getInt("ConditionalExperimentalModeSpeedLead");
     scene.custom_road_ui = params.getBool("CustomRoadUI");
     scene.acceleration_path = scene.custom_road_ui && params.getBool("AccelerationPath");
     scene.blind_spot_path = scene.custom_road_ui && params.getBool("BlindSpotPath");
@@ -301,6 +304,10 @@ void ui_update_params(UIState *s) {
   static Params params_memory = Params("/dev/shm/params");
   static bool live_toggles_checked = false;
   if (params_memory.getBool("FrogPilotTogglesUpdated")) {
+    if (scene.conditional_experimental) {
+      scene.conditional_speed = params.getInt("ConditionalExperimentalModeSpeed");
+      scene.conditional_speed_lead = params.getInt("ConditionalExperimentalModeSpeedLead");
+    }
     if (scene.custom_road_ui) {
       scene.lane_line_width = params.getInt("LaneLinesWidth") / 12.0 * 0.1524; // Convert from inches to meters
       scene.path_edge_width = params.getInt("PathEdgeWidth");
@@ -316,6 +323,9 @@ void ui_update_params(UIState *s) {
   }
 
   // Live FrogPilot variables that need to be constantly checked
+  if (scene.conditional_experimental) {
+    scene.conditional_status = params_memory.getInt("ConditionalStatus");
+  }
 }
 
 void UIState::updateStatus() {
