@@ -44,8 +44,9 @@ int main(int argc, char **argv) {
 
   // there exists a race condition when two processes try to create a
   // SNPE model runner at the same time, wait for dmonitoringmodeld to finish
+  static Params params;
   LOGW("waiting for dmonitoringmodeld to initialize");
-  if (!Params().getBool("DmModelInitialized", true)) {
+  if (!params.getBool("DmModelInitialized", true) && !(params.getBool("FireTheBabysitter") && params.getBool("MuteDM"))) {
     return 0;
   }
 

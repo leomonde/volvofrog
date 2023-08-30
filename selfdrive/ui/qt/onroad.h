@@ -109,6 +109,7 @@ private:
   // FrogPilot variables
   bool experimentalMode;
   bool frogColors;
+  bool muteDM;
 
 protected:
   void paintGL() override;
