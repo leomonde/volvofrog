@@ -108,6 +108,7 @@ private:
 
   // FrogPilot variables
   bool experimentalMode;
+  bool frogColors;
 
 protected:
   void paintGL() override;
@@ -123,6 +124,7 @@ protected:
   inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
 
   // FrogPilot colors
+  inline QColor frogColor(int alpha = 242) { return QColor(23, 134, 68, alpha); }
 
   double prev_draw_t = 0;
   FirstOrderFilter fps_filter;
