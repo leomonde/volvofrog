@@ -237,6 +237,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"TermsVersion", PERSISTENT},
     {"Timezone", PERSISTENT},
     {"TrainingVersion", PERSISTENT},
+    {"TSS2Tune", PERSISTENT},
     {"TurnDesires", PERSISTENT},
     {"TwilsoncoSSH", PERSISTENT},
     {"UbloxAvailable", PERSISTENT},
