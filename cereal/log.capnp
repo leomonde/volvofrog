@@ -697,6 +697,7 @@ struct ControlsState @0x97ff69c53601abf1 {
     enabled @2;
     softDisabling @3;
     overriding @4;  # superset of overriding with steering or accelerator
+    alwaysOnLateral @5;
   }
 
   enum AlertStatus {

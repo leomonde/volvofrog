@@ -208,12 +208,6 @@ static void update_state(UIState *s) {
   } else if ((s->sm->frame - s->sm->rcv_frame("pandaStates")) > 5*UI_FREQ) {
     scene.pandaType = cereal::PandaState::PandaType::UNKNOWN;
   }
-  if (sm.updated("carControl")) {
-    const auto carControl = sm["carControl"].getCarControl();
-    if (scene.always_on_lateral) {
-      scene.always_on_lateral_active = !scene.enabled && carControl.getAlwaysOnLateral();
-    }
-  }
   if (sm.updated("carParams")) {
     const auto carParams = sm["carParams"].getCarParams();
     scene.always_on_lateral = carParams.getAlwaysOnLateral();
@@ -345,11 +339,12 @@ void UIState::updateStatus() {
     auto state = controls_state.getState();
     if (state == cereal::ControlsState::OpenpilotState::PRE_ENABLED || state == cereal::ControlsState::OpenpilotState::OVERRIDING) {
       status = STATUS_OVERRIDE;
-    } else if (scene.always_on_lateral_active) {
+    } else if (state == cereal::ControlsState::OpenpilotState::ALWAYS_ON_LATERAL) {
       status = STATUS_LATERAL_ACTIVE;
     } else {
       status = controls_state.getEnabled() ? STATUS_ENGAGED : STATUS_DISENGAGED;
     }
+    scene.always_on_lateral_active = state == cereal::ControlsState::OpenpilotState::ALWAYS_ON_LATERAL;
   }
 
   // Handle onroad/offroad transition
@@ -371,8 +366,8 @@ UIState::UIState(QObject *parent) : QObject(parent) {
   sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
     "pandaStates", "carParams", "driverMonitoringState", "carState", "liveLocationKalman", "driverStateV2",
-    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan", "carControl",
-    "gpsLocationExternal", "lateralPlan", "longitudinalPlan"
+    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan", "gpsLocationExternal",
+    "lateralPlan", "longitudinalPlan"
   });
 
   Params params;

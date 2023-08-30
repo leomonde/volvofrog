@@ -52,8 +52,8 @@ SafetyModel = car.CarParams.SafetyModel
 IGNORED_SAFETY_MODES = (SafetyModel.silent, SafetyModel.noOutput)
 CSID_MAP = {"1": EventName.roadCameraError, "2": EventName.wideRoadCameraError, "0": EventName.driverCameraError}
 ACTUATOR_FIELDS = tuple(car.CarControl.Actuators.schema.fields.keys())
-ACTIVE_STATES = (State.enabled, State.softDisabling, State.overriding)
-ENABLED_STATES = (State.preEnabled, *ACTIVE_STATES)
+ACTIVE_STATES = (State.enabled, State.softDisabling, State.overriding, State.alwaysOnLateral)
+ENABLED_STATES = (State.preEnabled, *(set(ACTIVE_STATES) - {State.alwaysOnLateral}))
 
 
 class Controls:
@@ -117,6 +117,7 @@ class Controls:
 
     # Set "Always On Lateral" conditions
     self.always_on_lateral = self.CP.alwaysOnLateral
+    self.always_on_lateral_enabled = False
     self.cruiseState_previously_enabled = False
     if self.always_on_lateral:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.ALWAYS_ON_LATERAL
@@ -271,7 +272,7 @@ class Controls:
 
     # Disable on rising edge of accelerator or brake. Also disable on brake when speed > 0
     if (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
-      (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill)) or \
+      (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill) and not self.always_on_lateral_enabled) or \
       (CS.regenBraking and (not self.CS_prev.regenBraking or not CS.standstill)):
       self.events.add(EventName.pedalPressed)
 
@@ -631,11 +632,13 @@ class Controls:
       self.cruiseState_previously_enabled |= CS.cruiseState.enabled
       gear = car.CarState.GearShifter
       gear_check = not (CS.gearShifter == gear.neutral or CS.gearShifter == gear.park or CS.gearShifter == gear.reverse or CS.gearShifter == gear.unknown)
-      CC.alwaysOnLateral = self.cruiseState_previously_enabled and gear_check
+      self.always_on_lateral_enabled = self.cruiseState_previously_enabled and gear_check
+      if not self.enabled and self.always_on_lateral_enabled:
+        self.state = State.alwaysOnLateral
 
     # Check which actuators can be enabled
     standstill = CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) or CS.standstill
-    CC.latActive = (self.active or CC.alwaysOnLateral) and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
+    CC.latActive = (self.active or self.always_on_lateral_enabled) and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
                    (not standstill or self.joystick_mode)
     CC.longActive = self.enabled and not self.events.contains(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
 

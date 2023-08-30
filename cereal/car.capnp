@@ -335,8 +335,7 @@ struct CarControl {
   rightBlinker @16: Bool;
 
   # FrogPilot CarControls
-  alwaysOnLateral @17: Bool;
-  reverseCruise @18: Bool;
+  reverseCruise @17: Bool;
 
   # Any car specific rate limits or quirks applied by
   # the CarController are reflected in actuatorsOutput
