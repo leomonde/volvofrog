@@ -87,6 +87,7 @@ private:
 
   // FrogPilot widgets
   void drawCompass(QPainter &p);
+  void drawFrogSignals(QPainter &p);
   void drawStatusBar(QPainter &p);
 
   QVBoxLayout *main_layout;
@@ -118,15 +119,21 @@ private:
   bool compass;
   bool experimentalMode;
   bool frogColors;
+  bool frogSignals;
   bool muteDM;
   bool rotatingWheel;
+  bool turnSignalLeft;
+  bool turnSignalRight;
+  int animationFrameIndex;
   int bearingDeg;
   int steeringAngleDeg;
   int steeringWheel;
   QPixmap compass_inner_img;
   QPixmap engage_img;
   QPixmap experimental_img;
+  static constexpr int totalFrames = 8;
   std::map<int, QPixmap> wheel_images;
+  std::vector<QPixmap> signalImgVector;
 
 protected:
   void paintGL() override;
