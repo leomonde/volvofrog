@@ -52,6 +52,8 @@ private:
   bool engageable;
 
   // FrogPilot variables
+  int steeringWheel;
+  std::map<int, QPixmap> wheel_images;
 
 };
 
@@ -112,8 +114,10 @@ private:
   bool muteDM;
   bool rotatingWheel;
   int steeringAngleDeg;
+  int steeringWheel;
   QPixmap engage_img;
   QPixmap experimental_img;
+  std::map<int, QPixmap> wheel_images;
 
 protected:
   void paintGL() override;
