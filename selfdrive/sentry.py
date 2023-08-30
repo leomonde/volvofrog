@@ -4,18 +4,16 @@ from enum import Enum
 from sentry_sdk.integrations.threading import ThreadingIntegration
 
 from openpilot.common.params import Params
-from openpilot.selfdrive.athena.registration import is_registered_device
-from openpilot.system.hardware import HARDWARE, PC
+from openpilot.system.hardware import PC
 from openpilot.system.swaglog import cloudlog
-from openpilot.system.version import get_branch, get_commit, get_origin, get_version, \
-                              is_comma_remote, is_dirty, is_tested_branch
+from openpilot.system.version import get_branch, get_commit, get_origin, get_version
 
 
 class SentryProject(Enum):
   # python project
-  SELFDRIVE = "https://6f3c7076c1e14b2aa10f5dde6dda0cc4@o33823.ingest.sentry.io/77924"
+  SELFDRIVE = "https://5ad1714d27324c74a30f9c538bff3b8d@o4505034923769856.ingest.sentry.io/4505034930651136"
   # native project
-  SELFDRIVE_NATIVE = "https://3e4b586ed21a4479ad5d85083b639bc6@o33823.ingest.sentry.io/157615"
+  SELFDRIVE_NATIVE = "https://5ad1714d27324c74a30f9c538bff3b8d@o4505034923769856.ingest.sentry.io/4505034930651136"
 
 
 def report_tombstone(fn: str, message: str, contents: str) -> None:
@@ -44,12 +42,14 @@ def set_tag(key: str, value: str) -> None:
 
 def init(project: SentryProject) -> None:
   # forks like to mess with this, so double check
-  comma_remote = is_comma_remote() and "commaai" in get_origin(default="")
-  if not comma_remote or not is_registered_device() or PC:
+  frogpilot = "FrogAi" in get_origin(default="")
+  if not frogpilot or PC:
     return
 
-  env = "release" if is_tested_branch() else "master"
-  dongle_id = Params().get("DongleId", encoding='utf-8')
+  params = Params()
+  dongle_id = params.get("DongleId", encoding='utf-8')
+  installed = params.get("InstallDate")
+  updated = params.get("Updated")
 
   integrations = []
   if project == SentryProject.SELFDRIVE:
@@ -61,15 +61,13 @@ def init(project: SentryProject) -> None:
                   default_integrations=False,
                   release=get_version(),
                   integrations=integrations,
-                  traces_sample_rate=1.0,
-                  environment=env)
+                  traces_sample_rate=1.0)
 
   sentry_sdk.set_user({"id": dongle_id})
-  sentry_sdk.set_tag("dirty", is_dirty())
-  sentry_sdk.set_tag("origin", get_origin())
   sentry_sdk.set_tag("branch", get_branch())
   sentry_sdk.set_tag("commit", get_commit())
-  sentry_sdk.set_tag("device", HARDWARE.get_device_type())
+  sentry_sdk.set_tag("updated", updated)
+  sentry_sdk.set_tag("installed", installed)
 
   if project == SentryProject.SELFDRIVE:
     sentry_sdk.Hub.current.start_session()
