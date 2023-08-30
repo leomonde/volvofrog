@@ -85,6 +85,7 @@ private:
 
 std::unordered_map<std::string, uint32_t> keys = {
     {"AccelerationPath", PERSISTENT},
+    {"AccelerationProfile", PERSISTENT},
     {"AccessToken", CLEAR_ON_MANAGER_START | DONT_LOG},
     {"AggressiveAcceleration", PERSISTENT},
     {"ApiCache_Device", PERSISTENT},
