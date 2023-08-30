@@ -631,7 +631,7 @@ class Controls:
       self.cruiseState_previously_enabled &= CS.cruiseState.available
       self.cruiseState_previously_enabled |= CS.cruiseState.enabled
       gear = car.CarState.GearShifter
-      gear_check = not (CS.gearShifter == gear.neutral or CS.gearShifter == gear.park or CS.gearShifter == gear.reverse or CS.gearShifter == gear.unknown)
+      gear_check = CS.gearShifter not in [gear.neutral, gear.park, gear.reverse, gear.unknown]
       self.always_on_lateral_enabled = self.cruiseState_previously_enabled and gear_check
       if not self.enabled and self.always_on_lateral_enabled:
         self.state = State.alwaysOnLateral
