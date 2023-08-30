@@ -282,6 +282,7 @@ class CarInterfaceBase(ABC):
     params = Params()
     lateralTune = params.get_bool("LateralTuning")
     ret.drivingPersonalitiesUIWheel = params.get_bool("DrivingPersonalitiesUIWheel")
+    ret.experimentalModeViaWheel = params.get_bool("ExperimentalModeViaWheel")
     ret.longitudinalTune = params.get_bool("LongitudinalTuning")
     ret.accelerationProfile = params.get_int("AccelerationProfile") if ret.longitudinalTune else 2
     ret.pfeiferjDesiredCurvatures = lateralTune and params.get_bool("AverageDesiredCurvature")

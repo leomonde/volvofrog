@@ -216,6 +216,7 @@ static void update_state(UIState *s) {
     scene.longitudinal_control = carParams.getOpenpilotLongitudinalControl();
     if (scene.longitudinal_control) {
       scene.driving_personalities_ui_wheel = carParams.getDrivingPersonalitiesUIWheel();
+      scene.experimental_mode_via_wheel = carParams.getExperimentalModeViaWheel();
     }
   }
   if (sm.updated("carState")) {

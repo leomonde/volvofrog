@@ -507,6 +507,7 @@ struct CarParams {
   # FrogPilot CarParams
   accelerationProfile @73 :UInt8;
   drivingPersonalitiesUIWheel @76 :Bool;
+  experimentalModeViaWheel @77 :Bool;
   longitudinalTune @78 :Bool;
   pfeiferjDesiredCurvatures @79 :Bool;
   twilsoncoNNFF @80 :Bool;
