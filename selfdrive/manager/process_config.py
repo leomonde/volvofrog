@@ -9,6 +9,7 @@ from openpilot.selfdrive.manager.process import PythonProcess, NativeProcess, Da
 params = Params()
 disable_logging = params.get_bool("DisableAllLogging")
 mute_dm = params.get_bool("FireTheBabysitter") and params.get_bool("MuteDM")
+not_prime = params.get_int("PrimeType") == 0
 
 WEBCAM = os.getenv("USE_WEBCAM") is not None
 
@@ -92,6 +93,9 @@ procs = [
   # debug procs
   NativeProcess("bridge", "cereal/messaging", ["./bridge"], notcar),
   PythonProcess("webjoystick", "tools.bodyteleop.web", notcar),
+
+  # FrogPilot procs
+  PythonProcess("otisserv", "selfdrive.navd.otisserv", always_run, enabled=not_prime),
 ]
 
 managed_processes = {p.name: p for p in procs}
