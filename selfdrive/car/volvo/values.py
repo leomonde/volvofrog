@@ -102,6 +102,7 @@ CAR_INFO: Dict[str, Optional[Union[VolvoCarInfo, List[VolvoCarInfo]]]] = {
 
 ECU_ADDRESS = { 
   CAR.V60: {"BCM": 0x760, "ECM": 0x7E0, "DIM": 0x720, "CEM": 0x726, "FSM": 0x764, "PSCM": 0x730, "TCM": 0x7E1, "CVM": 0x793},
+  #CAR.V40: {"BCM": 0x760, "ECM": 0x7E0, "DIM": 0x720, "CEM": 0x726, "FSM": 0x764, "PSCM": 0x730, "TCM": 0x7E1, "CVM": 0x793},
   }
 
 VOLVO_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
@@ -122,10 +123,13 @@ FW_QUERY_CONFIG = FwQueryConfig(
 
 FW_VERSIONS = {
   CAR.V60: {
-  (Ecu.engine, 0x7e0, None): [b'Y283_Y352_HP_Brazil_FWD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
-  (Ecu.unknown, 0x726, None): [b'30786853 BK\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
-  (Ecu.eps, 0x730, None): [b'31340673 AD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
-  (Ecu.fwdCamera, 0x764, None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  #(Ecu.engine, 0x7e0, None): [b'Y283_Y352_HP_Brazil_FWD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  #(Ecu.unknown, 0x726, None): [b'30786853 BK\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  #(Ecu.eps, 0x730, None): [b'31340673 AD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  #(Ecu.fwdCamera, 0x764, None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],
+  (Ecu.unknown, ECU_ADDRESS[CAR.V60]["CEM"], None): [b'30786853 BK\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],    # 0xf1a2
+  (Ecu.eps, ECU_ADDRESS[CAR.V60]["PSCM"], None): [b'31340673 AD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],       # 0xf1a2
+  (Ecu.fwdCamera, ECU_ADDRESS[CAR.V60]["FSM"], None): [b'31400454 AA\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'],  # 0xf1a2
   }
 }
 
