@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from openpilot.cereal import car
+from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from openpilot.selfdrive.car.interfaces import CarStateBase
 from openpilot.opendbc.can.parser import CANParser
