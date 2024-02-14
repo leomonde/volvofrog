@@ -191,7 +191,7 @@ class CarState(CarStateBase):
       ("BrakePedal", 50),
     ]
 
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
+    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks)
 
   @staticmethod
   def get_adas_can_parser(CP):
