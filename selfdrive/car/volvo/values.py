@@ -2,7 +2,7 @@ from collections import namedtuple
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union
 
-from openpilot.cereal import car
+from cereal import car
 from openpilot.panda.python import uds
 from openpilot.selfdrive.car import AngleRateLimit, dbc_dict
 from openpilot.selfdrive.car.docs_definitions import CarInfo, CarHarness, CarParts
