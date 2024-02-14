@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from openpilot.common.numpy_fast import clip, interp
-from openpilot.opendbc.can.packer import CANPacker
+from opendbc.can.packer import CANPacker
 from openpilot.selfdrive.car import apply_std_steer_angle_limits
 from openpilot.selfdrive.car.volvo import volvocan
 from openpilot.selfdrive.car.volvo.values import CAR, PLATFORM, CarControllerParams

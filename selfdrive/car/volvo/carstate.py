@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from cereal import car
 from openpilot.common.conversions import Conversions as CV
 from openpilot.selfdrive.car.interfaces import CarStateBase
-from openpilot.opendbc.can.parser import CANParser
-from openpilot.opendbc.can.can_define import CANDefine
+from opendbc.can.parser import CANParser
+from opendbc.can.can_define import CANDefine
 from openpilot.selfdrive.car.volvo.values import CAR, DBC, CarControllerParams, PLATFORM
 
 @dataclass
