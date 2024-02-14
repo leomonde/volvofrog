@@ -145,39 +145,8 @@ class CarState(CarStateBase):
     # ptcan on bus 0
     # this function generates lists for signal, messages and initial values
 
-    # Common signals for both platforms
-    signals = [
-      # sig_name, sig_address
-      ("VehicleSpeed", "VehicleSpeed1"),
-      ("TurnSignal", "MiscCarInfo"),
-      ("ACCOnOffBtn", "CCButtons"),
-      ("ACCResumeBtn", "CCButtons"),
-      ("ACCSetBtn", "CCButtons"),
-      ("ACCMinusBtn", "CCButtons"),
-      ("TimeGapIncreaseBtn", "CCButtons"),
-      ("TimeGapDecreaseBtn", "CCButtons"),
-
-      ("AccPedal", "AccPedal"),
-      ("BrakePedal", "BrakePedal"),
-      ("SteeringWheelRateOfChange", "PSCM1"),
-      
-      ("SteeringAngleServo", "PSCM1"),
-      ("LKATorque", "PSCM1"),
-      ("LKAActive", "PSCM1"),
-      ("byte0", "PSCM1"),
-      ("byte4", "PSCM1"),
-      ("byte7", "PSCM1"),
-
-      # diagnostic
-      ("byte03", "diagCEMResp"),
-      ("byte47", "diagCEMResp"),
-      ("byte03", "diagPSCMResp"),
-      ("byte47", "diagPSCMResp"),
-      ("byte03", "diagCVMResp"),
-      ("byte47", "diagCVMResp"),
-    ]
-
-    checks = [
+    # Common messages for both platforms
+    messages = [
       # sig_address, frequency
       ("CCButtons", 100),
       ("PSCM1", 50),
@@ -186,50 +155,30 @@ class CarState(CarStateBase):
       ("diagCEMResp", 0),
       ("diagPSCMResp", 0),
       ("diagCVMResp", 0),
-      
       ("AccPedal", 100),
       ("BrakePedal", 50),
     ]
 
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks)
+    return CANParser(DBC[CP.carFingerprint]['pt'], messages, 0)
 
   @staticmethod
   def get_adas_can_parser(CP):
     # radar on bus 1, not decoded yet
     # this function generates lists for signal, messages and initial values
-    signals = [
-      # sig_name, sig_address, default
-    ]
-    checks = [
-      # sig_address, frequency
+    messages = [
     ]
 
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 1)
+    return CANParser(DBC[CP.carFingerprint]['pt'], messages, 1)
 
   @staticmethod
   def get_cam_can_parser(CP):
     # camera on bus 2
-    # Common signals
-    signals = [
-      # sig_name, sig_address, default
-      ("byte03", "diagFSMResp"),
-      ("byte47", "diagFSMResp"),
-      ("TrqLim", "FSM2"),
-      ("LKAAngleReq", "FSM2"),
-      ("Checksum", "FSM2"),
-      ("LKASteerDirection", "FSM2"),
-      ("SET_X_22", "FSM2"),
-      ("SET_X_02", "FSM2"),
-      ("SET_X_10", "FSM2"),
-      ("SET_X_A4", "FSM2"),
-      ("ACCStatus", "FSM0"),
-    ]
-    # Common checks
-    checks = [
+    # Common messages
+    messages = [
       # sig_address, frequency
       ('FSM0', 100),
       ('FSM2', 50),
       ("diagFSMResp", 0),
     ]
 
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
+    return CANParser(DBC[CP.carFingerprint]['pt'], messages, 2)
