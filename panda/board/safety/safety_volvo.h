@@ -55,11 +55,11 @@ int acc_ped_val_prev = 0;
 const CanMsg VOLVO_TX_MSGS[] = { {MSG_FSM0_VOLVO_V60, 0, 8}, {MSG_FSM1_VOLVO_V60, 0, 8},
                                        {MSG_FSM2_VOLVO_V60, 0, 8}, {MSG_FSM3_VOLVO_V60, 0, 8},
                                        {MSG_FSM4_VOLVO_V60, 0, 8}, {MSG_FSM5_VOLVO_V60, 0, 8},
-                                       {MSG_PSCM1_VOLVO_V60, 2, 8},
+                                       {MSG_PSCM1_VOLVO_V60, 0, 8},
                                        {MSG_BTNS_VOLVO_V60, 0, 8},
-                                       {MSG_DIAG_FSM, 2, 8}, {MSG_DIAG_PSCM, 0, 8},
+                                       {MSG_DIAG_FSM, 0, 8}, {MSG_DIAG_PSCM, 0, 8},
                                        {MSG_DIAG_CEM, 0, 8}, {MSG_DIAG_CVM, 0, 8},
-                                       {MSG_DIAG_BROADCAST, 0, 8}, {MSG_DIAG_BROADCAST, 2, 8},
+                                       {MSG_DIAG_BROADCAST, 0, 8}, {MSG_DIAG_BROADCAST, 0, 8},
                                     };
 const int VOLVO_TX_MSGS_LEN = sizeof(VOLVO_TX_MSGS) / sizeof(VOLVO_TX_MSGS[0]);
 
@@ -68,7 +68,7 @@ const int VOLVO_TX_MSGS_LEN = sizeof(VOLVO_TX_MSGS) / sizeof(VOLVO_TX_MSGS[0]);
 // Works fine in C3.
 AddrCheckStruct volvo_checks[] = {
   {.msg = {{MSG_PSCM1_VOLVO_V60,     0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
-  {.msg = {{MSG_FSM0_VOLVO_V60,      2, 8, .check_checksum = false, .expected_timestep = 20000U}}},
+  {.msg = {{MSG_FSM0_VOLVO_V60,      0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
   {.msg = {{MSG_ACC_PEDAL_VOLVO_V60, 0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
 };
 
@@ -140,8 +140,8 @@ static int volvo_fwd_hook(int bus_num, int addr) {
   if( bus_num == 0 ){
     bool block_msg = (addr == MSG_PSCM1_VOLVO_V60);
     if ( !block_msg ) {
-      //bus_fwd = 2; // forward 0 -> 2
-      bus_fwd = block_msg ? -1 : 2;  // forward bus 0 -> 2
+      bus_fwd = 2; // forward 0 -> 2
+      //bus_fwd = block_msg ? -1 : 2;  // forward bus 0 -> 2
     }
   }
   
