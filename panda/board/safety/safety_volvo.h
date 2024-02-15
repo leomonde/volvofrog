@@ -102,6 +102,7 @@ static int volvo_rx_hook(CANPacket_t *to_push) {
       int acc_ped_val = ((GET_BYTE(to_push, 2) & 0x03) << 8) | GET_BYTE(to_push, 3);
       if( (acc_ped_val > 100) && (acc_ped_val_prev <= 100) ) {
         controls_allowed = false;
+        lateral_controls_allowed = false;
       }
       acc_ped_val_prev = acc_ped_val;
     }
