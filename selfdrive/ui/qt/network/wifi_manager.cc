@@ -8,8 +8,13 @@
 #include "selfdrive/ui/qt/util.h"
 
 bool compare_by_strength(const Network &a, const Network &b) {
-  return std::tuple(a.connected, strengthLevel(a.strength), b.ssid) >
-         std::tuple(b.connected, strengthLevel(b.strength), a.ssid);
+  //return std::tuple(a.connected, strengthLevel(a.strength), b.ssid) >
+  //       std::tuple(b.connected, strengthLevel(b.strength), a.ssid);
+  if (a.connected == ConnectedType::CONNECTED) return true;
+  if (b.connected == ConnectedType::CONNECTED) return false;
+  if (a.connected == ConnectedType::CONNECTING) return true;
+  if (b.connected == ConnectedType::CONNECTING) return false;
+  return a.strength > b.strength;
 }
 
 template <typename T = QDBusMessage, typename... Args>
@@ -77,7 +82,7 @@ void WifiManager::setup() {
 }
 
 void WifiManager::start() {
-  timer.start(5000);
+  timer.start(10000);
   refreshNetworks();
 }
 
@@ -434,7 +439,7 @@ void WifiManager::tetheringActivated(QDBusPendingCallWatcher *call) {
   int ipv4_forward = (prime_type == PrimeType::NONE || prime_type == PrimeType::LITE);
 
   if (!ipv4_forward) {
-    QTimer::singleShot(5000, this, [=] {
+    QTimer::singleShot(10000, this, [=] {
       qWarning() << "net.ipv4.ip_forward = 0";
       std::system("sudo sysctl net.ipv4.ip_forward=0");
     });
