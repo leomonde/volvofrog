@@ -55,11 +55,11 @@ int acc_ped_val_prev = 0;
 const CanMsg VOLVO_TX_MSGS[] = { {MSG_FSM0_VOLVO_V60, 0, 8}, {MSG_FSM1_VOLVO_V60, 0, 8},
                                        {MSG_FSM2_VOLVO_V60, 0, 8}, {MSG_FSM3_VOLVO_V60, 0, 8},
                                        {MSG_FSM4_VOLVO_V60, 0, 8}, {MSG_FSM5_VOLVO_V60, 0, 8},
-                                       {MSG_PSCM1_VOLVO_V60, 0, 8},
+                                       {MSG_PSCM1_VOLVO_V60, 2, 8},
                                        {MSG_BTNS_VOLVO_V60, 0, 8},
-                                       {MSG_DIAG_FSM, 0, 8}, {MSG_DIAG_PSCM, 0, 8},
+                                       {MSG_DIAG_FSM, 2, 8}, {MSG_DIAG_PSCM, 0, 8},
                                        {MSG_DIAG_CEM, 0, 8}, {MSG_DIAG_CVM, 0, 8},
-                                       {MSG_DIAG_BROADCAST, 0, 8}, {MSG_DIAG_BROADCAST, 0, 8},
+                                       {MSG_DIAG_BROADCAST, 0, 8}, {MSG_DIAG_BROADCAST, 2, 8},
                                     };
 const int VOLVO_TX_MSGS_LEN = sizeof(VOLVO_TX_MSGS) / sizeof(VOLVO_TX_MSGS[0]);
 
@@ -68,7 +68,7 @@ const int VOLVO_TX_MSGS_LEN = sizeof(VOLVO_TX_MSGS) / sizeof(VOLVO_TX_MSGS[0]);
 // Works fine in C3.
 AddrCheckStruct volvo_checks[] = {
   {.msg = {{MSG_PSCM1_VOLVO_V60,     0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
-  {.msg = {{MSG_FSM0_VOLVO_V60,      0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
+  {.msg = {{MSG_FSM0_VOLVO_V60,      2, 8, .check_checksum = false, .expected_timestep = 20000U}}},
   {.msg = {{MSG_ACC_PEDAL_VOLVO_V60, 0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
 };
 
@@ -101,7 +101,7 @@ static int volvo_rx_hook(CANPacket_t *to_push) {
     if( (addr == MSG_ACC_PEDAL_VOLVO_V60) && (bus == 0) ) {
       int acc_ped_val = ((GET_BYTE(to_push, 2) & 0x03) << 8) | GET_BYTE(to_push, 3);
       if( (acc_ped_val > 100) && (acc_ped_val_prev <= 100) ) {
-        controls_allowed = 0;
+        controls_allowed = false;
       }
       acc_ped_val_prev = acc_ped_val;
     }
