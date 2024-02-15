@@ -152,9 +152,9 @@ class CarState(CarStateBase):
       ("PSCM1", 50),
       ("VehicleSpeed1", 50),
       ("MiscCarInfo", 25),
-      ("diagCEMResp", 0),
-      ("diagPSCMResp", 0),
-      ("diagCVMResp", 0),
+      ("diagCEMResp", 25),
+      ("diagPSCMResp", 25),
+      ("diagCVMResp", 25),
       ("AccPedal", 100),
       ("BrakePedal", 50),
     ]
@@ -176,9 +176,9 @@ class CarState(CarStateBase):
     # Common messages
     messages = [
       # sig_address, frequency
-      ('FSM0', 100),
-      ('FSM2', 50),
-      ("diagFSMResp", 0),
+      ("FSM0", 100),
+      ("FSM2", 50),
+      ("diagFSMResp", 25),
     ]
 
     return CANParser(DBC[CP.carFingerprint]['pt'], messages, 2)
