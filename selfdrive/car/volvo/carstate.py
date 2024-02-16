@@ -177,7 +177,7 @@ class CarState(CarStateBase):
     messages = [
       # sig_address, frequency
       ("FSM0", 100),
-      ("FSM2", 50),
+      ("FSM2", 100),
       ("diagFSMResp", 0),
     ]
 

@@ -60,7 +60,7 @@ def create_steering_control(packer, SteerCommand):
   #values.update(values_static)
 
   # Create can message with "translated" can bytes.
-  dat = packer.make_can_msg("FSM2", 0, values)[2]
+  dat = packer.make_can_msg("FSM2", 0, values)#[2]
   values["Checksum"] = create_chksum(dat)
 
   return packer.make_can_msg("FSM2", 0, values)
