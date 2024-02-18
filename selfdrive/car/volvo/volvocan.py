@@ -19,7 +19,7 @@ def manipulateServo(packer, CS):
       "byte0" : CS.PSCMInfo["byte0"],
       "byte4" : CS.PSCMInfo["byte4"],
       "byte7" : CS.PSCMInfo["byte7"],
-      "LKAActive" : CS.PSCMInfo["LKAActive"],
+      "LKAActive" : CS.PSCMInfo["LKAActive"] & 0xF5,
       "SteeringWheelRateOfChange" : CS.PSCMInfo["SteeringWheelRateOfChange"], 
   }
 
