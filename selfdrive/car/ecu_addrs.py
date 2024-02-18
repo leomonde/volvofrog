@@ -17,8 +17,7 @@ def make_tester_present_msg(addr, bus, subaddr=None):
     dat.insert(0, subaddr)
 
   dat.extend([0x0] * (8 - len(dat)))
-  #return make_can_msg(addr, bytes(dat), bus)
-  return make_can_msg(addr, bus, bytes(dat))
+  return make_can_msg(addr, bytes(dat), bus)
 
 
 def is_tester_present_response(msg: capnp.lib.capnp._DynamicStructReader, subaddr: Optional[int] = None) -> bool:
