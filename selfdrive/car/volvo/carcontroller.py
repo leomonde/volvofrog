@@ -42,8 +42,8 @@ class CarController():
 
     # Diag
     self.doDTCRequests = True  # Turn on and off DTC requests
-    self.checkPN = False       # Check partnumbers
-    self.clearDtcs = False      # Clear dtc on startup
+    self.checkPN = True       # Check partnumbers
+    self.clearDtcs = True      # Clear dtc on startup
     self.timeout = 0           # Set to 0 as init
     self.diagRequest = { 
       "byte0": 0x03,
