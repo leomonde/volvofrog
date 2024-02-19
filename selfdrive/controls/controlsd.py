@@ -117,7 +117,8 @@ class Controls:
     # Set "Always On Lateral" conditions
     self.always_on_lateral = self.CP.alwaysOnLateral
     self.cruiseState_previously_enabled = False
-    if self.always_on_lateral:
+    #vp if self.always_on_lateral:
+    if False:
       self.CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.ALWAYS_ON_LATERAL
       if self.disengage_on_accelerator:
         self.disengage_on_accelerator = False
@@ -625,7 +626,8 @@ class Controls:
     CC.reverseCruise = self.reverse_cruise_increase
 
     # Always on lateral
-    if self.always_on_lateral:
+    #vp if self.always_on_lateral:
+    if False:
       self.cruiseState_previously_enabled &= CS.cruiseState.available
       self.cruiseState_previously_enabled |= CS.cruiseState.enabled
       gear = car.CarState.GearShifter
