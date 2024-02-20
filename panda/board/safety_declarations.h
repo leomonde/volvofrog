@@ -191,7 +191,7 @@ void safety_tick(const addr_checks *addr_checks);
 
 // This can be set by the safety hooks
 bool controls_allowed = false;
-// bool lateral_controls_allowed = false;
+bool lateral_controls_allowed = false;
 bool relay_malfunction = false;
 bool gas_interceptor_detected = false;
 int gas_interceptor_prev = 0;
@@ -251,4 +251,4 @@ uint32_t safety_mode_cnt = 0U;
 const uint32_t RELAY_TRNS_TIMEOUT = 1U;
 
 // Always on Lateral
-// #define ALT_EXP_ALWAYS_ON_LATERAL 16
+#define ALT_EXP_ALWAYS_ON_LATERAL 16
