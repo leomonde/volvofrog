@@ -29,6 +29,8 @@ class CarState(CarStateBase):
       "byte7" : 0,
       "LKAActive" : 0,
       "SteeringWheelRateOfChange" : 0,
+      "LKATorque" : 0,
+      "SteeringAngleServo" : 0,
     }
 
     # Detect if servo stop responding to steering command.
@@ -65,7 +67,7 @@ class CarState(CarStateBase):
       cp.vl["CCButtons"]['ACCResumeBtn']) 
     
     # Update gas and brake
-    ret.gas = cp.vl["AccPedal"]['AccPedal'] / 102.3
+    ret.gas = float(cp.vl["AccPedal"]['AccPedal']) / 102.3
     ret.gasPressed = ret.gas > 0.1
     ret.brakePressed = False
 

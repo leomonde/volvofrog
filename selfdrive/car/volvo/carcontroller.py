@@ -41,7 +41,7 @@ class CarController():
     self.BLOCK_LEN = self.CCP.BLOCK_LEN
 
     # Diag
-    self.doDTCRequests = False  # Turn on and off DTC requests
+    self.doDTCRequests = True  # Turn on and off DTC requests
     self.checkPN = True       # Check partnumbers
     self.clearDtcs = True      # Clear dtc on startup
     self.timeout = 0           # Set to 0 as init
