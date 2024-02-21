@@ -101,8 +101,7 @@ static int volvo_rx_hook(CANPacket_t *to_push) {
     if( (addr == MSG_ACC_PEDAL_VOLVO_V60) && (bus == 0) ) {
       int acc_ped_val = ((GET_BYTE(to_push, 2) & 0x03) << 8) | GET_BYTE(to_push, 3);
       if( (acc_ped_val > 100) && (acc_ped_val_prev <= 100) ) {
-        controls_allowed = false;
-        lateral_controls_allowed = false;
+        controls_allowed = 0;
       }
       acc_ped_val_prev = acc_ped_val;
     }
@@ -141,8 +140,8 @@ static int volvo_fwd_hook(int bus_num, int addr) {
   if( bus_num == 0 ){
     bool block_msg = (addr == MSG_PSCM1_VOLVO_V60);
     if ( !block_msg ) {
-      bus_fwd = 2; // forward 0 -> 2
-      //bus_fwd = block_msg ? -1 : 2;  // forward bus 0 -> 2
+      //bus_fwd = 2; // forward 0 -> 2
+      bus_fwd = block_msg ? -1 : 2;  // forward bus 0 -> 2
     }
   }
   

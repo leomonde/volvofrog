@@ -253,8 +253,7 @@ class CarInterfaceBase(ABC):
 
     # standard ALC params
     ret.tireStiffnessFactor = 1.0
-    #ret.steerControlType = car.CarParams.SteerControlType.torque
-    ret.steerControlType = car.CarParams.SteerControlType.angle
+    ret.steerControlType = car.CarParams.SteerControlType.torque
     ret.minSteerSpeed = 0.
     ret.wheelSpeedFactor = 1.0
 
