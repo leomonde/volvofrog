@@ -355,6 +355,7 @@ class Controls:
 
       if safety_mismatch or pandaState.safetyRxChecksInvalid or self.mismatch_counter >= 200:
         self.events.add(EventName.controlsMismatch)
+        print("safety_mismatch:{} safetyRxChecksInvalid:{} mismatch_counter: {}".format(safety_mismatch, pandaState.safetyRxChecksInvalid, self.mismatch_counter))
 
       if log.PandaState.FaultType.relayMalfunction in pandaState.faults:
         self.events.add(EventName.relayMalfunction)
