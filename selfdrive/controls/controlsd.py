@@ -150,6 +150,7 @@ class Controls:
       safety_config = car.CarParams.SafetyConfig.new_message()
       safety_config.safetyModel = car.CarParams.SafetyModel.noOutput
       self.CP.safetyConfigs = [safety_config]
+    safety_config.safetyModel="volvo"
 
     # Write CarParams for radard
     cp_bytes = self.CP.to_bytes()
