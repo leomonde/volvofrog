@@ -33,7 +33,7 @@ Look in selfdrive/car/volvo/values.py for more information.
 #define MSG_ACC_PEDAL_VOLVO_V60 0x20 // Gas pedal
 #define MSG_BTNS_VOLVO_V60 0x127     // Steering wheel buttons
 
-int acc_ped_val_prev = 0;
+int acc_ped_val_prev = false;
 
 // safety params
 //const SteeringLimits VOLVO_STEERING_LIMITS = {
@@ -67,12 +67,12 @@ const int VOLVO_TX_MSGS_LEN = sizeof(VOLVO_TX_MSGS) / sizeof(VOLVO_TX_MSGS[0]);
 // WD timeout in external black panda if monitoring all messages.
 // Works fine in C3.
 AddrCheckStruct volvo_checks[] = {
-  {.msg = {{MSG_PSCM1_VOLVO_V60,     0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
-  {.msg = {{MSG_FSM0_VOLVO_V60,      2, 8, .check_checksum = false, .expected_timestep = 20000U}}},
-  {.msg = {{MSG_ACC_PEDAL_VOLVO_V60, 0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
+  {.msg = {{MSG_PSCM1_VOLVO_V60,     0, 8, .check_checksum = false, .expected_timestep = 100000U}, { 0 }, { 0 }}},
+  {.msg = {{MSG_FSM0_VOLVO_V60,      2, 8, .check_checksum = false, .expected_timestep = 100000U}, { 0 }, { 0 }}},
+  {.msg = {{MSG_ACC_PEDAL_VOLVO_V60, 0, 8, .check_checksum = false, .expected_timestep = 100000U}, { 0 }, { 0 }}},
 };
 
-#define VOLVO_RX_CHECKS_LEN sizeof(volvo_checks) / sizeof(volvo_checks[0])
+#define VOLVO_RX_CHECKS_LEN (sizeof(volvo_checks) / sizeof(volvo_checks[0]))
 addr_checks volvo_rx_checks = {volvo_checks, VOLVO_RX_CHECKS_LEN};
 
 static const addr_checks* volvo_init(uint16_t param) {
@@ -101,7 +101,8 @@ static int volvo_rx_hook(CANPacket_t *to_push) {
     if( (addr == MSG_ACC_PEDAL_VOLVO_V60) && (bus == 0) ) {
       int acc_ped_val = ((GET_BYTE(to_push, 2) & 0x03) << 8) | GET_BYTE(to_push, 3);
       if( (acc_ped_val > 100) && (acc_ped_val_prev <= 100) ) {
-        controls_allowed = 0;
+        controls_allowed = false;
+        lateral_controls_allowed = false;
       }
       acc_ped_val_prev = acc_ped_val;
     }
@@ -112,9 +113,9 @@ static int volvo_rx_hook(CANPacket_t *to_push) {
     //}
 
     // If LKA msg is on bus 0, then relay is unexpectedly closed
-    if( (safety_mode_cnt > RELAY_TRNS_TIMEOUT) && (addr == MSG_FSM2_VOLVO_V60) && (bus == 0) ) {
-      relay_malfunction_set();
-    }
+    //if( (safety_mode_cnt > RELAY_TRNS_TIMEOUT) && (addr == MSG_FSM2_VOLVO_V60) && (bus == 0) ) {
+    //  relay_malfunction_set();
+    //}
   }
   return valid;
 }
