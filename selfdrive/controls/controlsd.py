@@ -143,6 +143,9 @@ class Controls:
 
     controller_available = self.CI.CC is not None and not passive and not self.CP.dashcamOnly
     self.read_only = not car_recognized or not controller_available or self.CP.dashcamOnly
+    #vp
+    print("controller_available: {} self.CI.CC: {} passive: {} self.CP.dashcamOnly: {}".format(controller_available, self.CI.CC, passive, self.CP.dashcamOnly))
+    print("self.read_only: {} car_recognized: {} controller_available: {}".format(self.read_only, car_recognized, controller_available))
     if self.read_only:
       safety_config = car.CarParams.SafetyConfig.new_message()
       safety_config.safetyModel = car.CarParams.SafetyModel.noOutput
@@ -350,14 +353,16 @@ class Controls:
         safety_mismatch = pandaState.safetyModel != self.CP.safetyConfigs[i].safetyModel or \
                           pandaState.safetyParam != self.CP.safetyConfigs[i].safetyParam or \
                           pandaState.alternativeExperience != self.CP.alternativeExperience
-        print("pandaState.safetyModel:{} self.CP.safetyConfigs[i].safetyModel:{}".format(pandaState.safetyModel, self.CP.safetyConfigs[i].safetyModel))
-        print("pandaState.safetyParam: {} self.CP.safetyConfigs[i].safetyParam: {}".format(pandaState.safetyParam, self.CP.safetyConfigs[i].safetyParam))
-        print("pandaState.alternativeExperience: {} self.CP.alternativeExperience: {}".format(pandaState.alternativeExperience, self.CP.alternativeExperience))
+        #vp
+        #print("pandaState.safetyModel:{} self.CP.safetyConfigs[i].safetyModel:{}".format(pandaState.safetyModel, self.CP.safetyConfigs[i].safetyModel))
+        #print("pandaState.safetyParam: {} self.CP.safetyConfigs[i].safetyParam: {}".format(pandaState.safetyParam, self.CP.safetyConfigs[i].safetyParam))
+        #print("pandaState.alternativeExperience: {} self.CP.alternativeExperience: {}".format(pandaState.alternativeExperience, self.CP.alternativeExperience))
       else:
         safety_mismatch = pandaState.safetyModel not in IGNORED_SAFETY_MODES
 
       if safety_mismatch or pandaState.safetyRxChecksInvalid or self.mismatch_counter >= 200:
         self.events.add(EventName.controlsMismatch)
+        #vp
         #print("safety_mismatch:{} safetyRxChecksInvalid:{} mismatch_counter: {}".format(safety_mismatch, pandaState.safetyRxChecksInvalid, self.mismatch_counter))
 
       if log.PandaState.FaultType.relayMalfunction in pandaState.faults:
