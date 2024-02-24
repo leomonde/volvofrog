@@ -354,7 +354,7 @@ class Controls:
         safety_mismatch = pandaState.safetyParam != self.CP.safetyConfigs[i].safetyParam or \
                           pandaState.alternativeExperience != self.CP.alternativeExperience
         #vp
-        #print("pandaState.safetyModel:{} self.CP.safetyConfigs[i].safetyModel:{}".format(pandaState.safetyModel, self.CP.safetyConfigs[i].safetyModel))
+        print("pandaState.safetyModel:{} self.CP.safetyConfigs[i].safetyModel:{}".format(pandaState.safetyModel, self.CP.safetyConfigs[i].safetyModel))
         #print("pandaState.safetyParam: {} self.CP.safetyConfigs[i].safetyParam: {}".format(pandaState.safetyParam, self.CP.safetyConfigs[i].safetyParam))
         #print("pandaState.alternativeExperience: {} self.CP.alternativeExperience: {}".format(pandaState.alternativeExperience, self.CP.alternativeExperience))
       else:
