@@ -201,11 +201,11 @@ class CarInterfaceBase(ABC):
       ret.mass = ret.mass + STD_CARGO_KG
 
     # Enable torque controller for all cars
-    CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
-    eps_firmware = str(next((fw.fwVersion for fw in car_fw if fw.ecu == "eps"), ""))
-    model = get_nn_model_path(candidate, eps_firmware)
-    if model is not None:
-      ret.lateralTuning.torque.nnModelName = os.path.splitext(os.path.basename(model))[0]
+    #CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+    #eps_firmware = str(next((fw.fwVersion for fw in car_fw if fw.ecu == "eps"), ""))
+    #model = get_nn_model_path(candidate, eps_firmware)
+    #if model is not None:
+    #  ret.lateralTuning.torque.nnModelName = os.path.splitext(os.path.basename(model))[0]
 
     # Set params dependent on values set by the car interface
     ret.rotationalInertia = scale_rot_inertia(ret.mass, ret.wheelbase)
